@@ -1,27 +1,14 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'app.dart';
+import 'features/auth/data/mock_auth_repository.dart';
 
 void main() {
-  runApp(const MyApp());
-}
+  WidgetsFlutterBinding.ensureInitialized();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // Active authentication repository.
+  // To switch to live Firebase when credentials and configuration are provided later:
+  // final authRepository = FirebaseAuthRepository();
+  final authRepository = MockAuthRepository();
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'CNPM-DAU',
-      home: Scaffold(
-        appBar: AppBar(title: const Text('CNPM-DAU')),
-        body: const Center(
-          child: Text(
-            'Chào bạn khóa 24CT\nđến với học phần CNPM-DAU',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-    );
-  }
+  runApp(BoardingHouseApp(authRepository: authRepository));
 }

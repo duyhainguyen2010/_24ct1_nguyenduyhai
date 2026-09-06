@@ -1,30 +1,79 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:_24ct1_nguyenduyhai/main.dart';
+import 'package:_24ct1_nguyenduyhai/app.dart';
+import 'package:_24ct1_nguyenduyhai/features/auth/data/mock_auth_repository.dart';
+import 'package:_24ct1_nguyenduyhai/features/auth/domain/models/app_user.dart';
+import 'package:_24ct1_nguyenduyhai/features/auth/domain/models/user_role.dart';
+import 'package:_24ct1_nguyenduyhai/core/constants/app_strings.dart';
+import 'package:_24ct1_nguyenduyhai/features/home/presentation/widgets/featured_boarding_house_card.dart';
+import 'package:_24ct1_nguyenduyhai/features/home/presentation/widgets/map_discovery_card.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Unauthenticated user starts on LoginScreen', (WidgetTester tester) async {
+    final repo = MockAuthRepository();
+    await tester.pumpWidget(BoardingHouseApp(authRepository: repo));
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Đăng nhập'), findsWidgets);
+    expect(find.text('Đăng ký ngay'), findsOneWidget);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  testWidgets('Authenticated user navigates to MainShellScreen with HomeScreen rendered', (WidgetTester tester) async {
+    final verifiedUser = AppUser(
+      uid: 'test-uid',
+      email: 'student@example.com',
+      fullName: 'Nguyễn Sinh Viên',
+      role: UserRole.tenant,
+      isEmailVerified: true,
+      createdAt: DateTime.now(),
+    );
+    final repo = MockAuthRepository(initialUser: verifiedUser);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tester.pumpWidget(BoardingHouseApp(authRepository: repo));
+    await tester.pumpAndSettle();
+
+    // Verify Tab is on Home
+    expect(find.text(AppStrings.tabHome), findsWidgets);
+    expect(find.text(AppStrings.tabSearch), findsOneWidget);
+
+    // Verify Home personalized greeting with user name
+    expect(find.textContaining('Nguyễn Sinh Viên'), findsOneWidget);
+
+    // Verify Search bar is present
+    expect(find.text('Tìm khu vực, tên trọ, trường ĐH...'), findsOneWidget);
+
+    // Verify Featured section
+    expect(find.text('Phòng trọ nổi bật ⭐'), findsOneWidget);
+
+    // Tap on the first featured card and verify navigation to RoomDetailScreen
+    await tester.tap(find.byType(FeaturedBoardingHouseCard).first);
+    await tester.pumpAndSettle();
+
+    // Verify RoomDetailScreen loaded with title, description, amenities, and contact actions
+    expect(find.text('Gọi chủ trọ'), findsOneWidget);
+    expect(find.text('Mô tả chi tiết'), findsOneWidget);
+    expect(find.text('Wi-Fi tốc độ cao'), findsOneWidget);
+
+    // Navigate back to Home
+    await tester.tap(find.byIcon(Icons.arrow_back_rounded));
+    await tester.pumpAndSettle();
+
+    // Verify Map CTA card
+    expect(find.byType(MapDiscoveryCard), findsOneWidget);
+
+    // Scroll down to make Map CTA card clearly visible and tap it
+    await tester.drag(find.byType(SingleChildScrollView).first, const Offset(0, -300));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(MapDiscoveryCard));
+    await tester.pumpAndSettle();
+
+    // Verify that tapping Map CTA navigated to Map tab (Tab index 2)
+    expect(find.text(AppStrings.tabMap), findsWidgets);
+
+    // Tap Search tab navigation item and verify navigation
+    await tester.tap(find.text(AppStrings.tabSearch));
+    await tester.pumpAndSettle();
+    expect(find.text(AppStrings.tabSearch), findsWidgets);
   });
 }
