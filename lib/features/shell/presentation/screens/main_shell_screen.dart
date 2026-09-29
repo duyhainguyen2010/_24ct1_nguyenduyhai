@@ -1,4 +1,5 @@
-﻿import '../../../home/presentation/screens/home_screen.dart';
+﻿import '../../../search/presentation/screens/search_screen.dart';
+import '../../../home/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
@@ -134,10 +135,7 @@ class _MainShellScreenState extends State<MainShellScreen> {
       HomeScreen(
         onNavigateToTab: _onDestinationSelected,
       ),
-      const ShellTabPlaceholder(
-        title: AppStrings.tabSearch,
-        icon: Icons.search_rounded,
-      ),
+      const SearchScreen(),
       const ShellTabPlaceholder(
         title: AppStrings.tabMap,
         icon: Icons.map_rounded,
@@ -193,4 +191,5 @@ class _MainShellScreenState extends State<MainShellScreen> {
     );
   }
 }
+
 

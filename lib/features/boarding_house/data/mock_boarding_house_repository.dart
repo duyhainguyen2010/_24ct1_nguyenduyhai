@@ -1,6 +1,8 @@
 ﻿import 'dart:async';
 import '../domain/models/boarding_house.dart';
+import '../domain/models/boarding_house_filter.dart';
 import '../domain/models/room_amenity.dart';
+import '../domain/models/room_sort_option.dart';
 import '../domain/repositories/boarding_house_repository.dart';
 
 /// In-memory mock repository providing realistic university boarding house data.
@@ -87,7 +89,7 @@ class MockBoardingHouseRepository implements BoardingHouseRepository {
       address: '88 Tôn Đức Thắng, Q. Cẩm Lệ, Đà Nẵng',
       area: 18.0,
       isFeatured: false,
-      isAvailable: false, // Demo unavailable room (Hết phòng)
+      isAvailable: false, // Unavailable room
       createdAt: DateTime.now().subtract(const Duration(days: 2)),
       latitude: 16.0421,
       longitude: 108.1812,
@@ -208,5 +210,73 @@ class MockBoardingHouseRepository implements BoardingHouseRepository {
     } catch (_) {
       return null;
     }
+  }
+
+  @override
+  Future<List<BoardingHouse>> searchBoardingHouses(BoardingHouseFilter filter) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+
+    var results = List<BoardingHouse>.from(_mockData);
+
+    // 1. Text Search (title & address, case-insensitive, trimmed)
+    if (filter.query != null && filter.query!.trim().isNotEmpty) {
+      final q = filter.query!.trim().toLowerCase();
+      results = results.where((item) {
+        final titleMatch = item.title.toLowerCase().contains(q);
+        final addressMatch = item.address.toLowerCase().contains(q);
+        return titleMatch || addressMatch;
+      }).toList();
+    }
+
+    // 2. Monthly Price Range
+    if (filter.minPrice != null && filter.minPrice! > 0) {
+      results = results.where((item) => item.monthlyPrice >= filter.minPrice!).toList();
+    }
+    if (filter.maxPrice != null && filter.maxPrice! > 0) {
+      results = results.where((item) => item.monthlyPrice <= filter.maxPrice!).toList();
+    }
+
+    // 3. Room Area Range
+    if (filter.minArea != null && filter.minArea! > 0) {
+      results = results.where((item) => item.area >= filter.minArea!).toList();
+    }
+    if (filter.maxArea != null && filter.maxArea! > 0) {
+      results = results.where((item) => item.area <= filter.maxArea!).toList();
+    }
+
+    // 4. Amenities Filter (must contain ALL selected amenities)
+    if (filter.amenities.isNotEmpty) {
+      results = results.where((item) {
+        for (final amenity in filter.amenities) {
+          if (!item.amenities.contains(amenity)) {
+            return false;
+          }
+        }
+        return true;
+      }).toList();
+    }
+
+    // 5. Availability Filter
+    if (filter.onlyAvailable) {
+      results = results.where((item) => item.isAvailable).toList();
+    }
+
+    // 6. Sorting
+    switch (filter.sortOption) {
+      case RoomSortOption.newest:
+        results.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        break;
+      case RoomSortOption.priceLowToHigh:
+        results.sort((a, b) => a.monthlyPrice.compareTo(b.monthlyPrice));
+        break;
+      case RoomSortOption.priceHighToLow:
+        results.sort((a, b) => b.monthlyPrice.compareTo(a.monthlyPrice));
+        break;
+      case RoomSortOption.nearest:
+        results.sort((a, b) => a.mockDistanceKm.compareTo(b.mockDistanceKm));
+        break;
+    }
+
+    return results;
   }
 }

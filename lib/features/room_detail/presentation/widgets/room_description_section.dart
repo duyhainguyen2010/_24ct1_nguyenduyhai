@@ -7,20 +7,14 @@ import '../../../../core/constants/app_typography.dart';
 class RoomDescriptionSection extends StatelessWidget {
   final String description;
 
-  const RoomDescriptionSection({
-    super.key,
-    required this.description,
-  });
+  const RoomDescriptionSection({super.key, required this.description});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Mô tả chi tiết',
-          style: AppTypography.heading3,
-        ),
+        const Text('Mô tả chi tiết', style: AppTypography.heading3),
         const SizedBox(height: AppDimensions.spacingSm),
         Text(
           description.isNotEmpty

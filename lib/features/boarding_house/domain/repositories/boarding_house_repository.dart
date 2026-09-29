@@ -1,4 +1,5 @@
 ﻿import '../models/boarding_house.dart';
+import '../models/boarding_house_filter.dart';
 
 /// Contract for querying boarding house listings.
 abstract class BoardingHouseRepository {
@@ -13,4 +14,7 @@ abstract class BoardingHouseRepository {
 
   /// Fetches a single listing by its identifier.
   Future<BoardingHouse?> getBoardingHouseById(String id);
+
+  /// Searches and filters boarding houses based on criteria.
+  Future<List<BoardingHouse>> searchBoardingHouses(BoardingHouseFilter filter);
 }

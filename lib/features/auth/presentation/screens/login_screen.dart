@@ -77,7 +77,9 @@ class _LoginScreenState extends State<LoginScreen> {
               vertical: AppDimensions.spacingLg,
             ),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: AppDimensions.maxContentWidth),
+              constraints: const BoxConstraints(
+                maxWidth: AppDimensions.maxContentWidth,
+              ),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -117,16 +119,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: BoxDecoration(
                         color: AppColors.secondaryLight,
                         borderRadius: AppDimensions.borderRadiusSm,
-                        border: Border.all(color: AppColors.secondary.withValues(alpha: 0.3)),
+                        border: Border.all(
+                          color: AppColors.secondary.withValues(alpha: 0.3),
+                        ),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.info_outline, size: 20, color: AppColors.secondary),
+                          const Icon(
+                            Icons.info_outline,
+                            size: 20,
+                            color: AppColors.secondary,
+                          ),
                           const SizedBox(width: AppDimensions.spacingSm),
                           Expanded(
                             child: Text(
                               'Tài khoản mẫu: tenant@example.com / password123',
-                              style: AppTypography.caption.copyWith(color: AppColors.textPrimary),
+                              style: AppTypography.caption.copyWith(
+                                color: AppColors.textPrimary,
+                              ),
                             ),
                           ),
                         ],
@@ -164,7 +174,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextButton(
                         onPressed: isLoading
                             ? null
-                            : () => Navigator.pushNamed(context, AppRoutes.forgotPassword),
+                            : () => Navigator.pushNamed(
+                                context,
+                                AppRoutes.forgotPassword,
+                              ),
                         child: Text(
                           'Quên mật khẩu?',
                           style: AppTypography.bodySmall.copyWith(
@@ -197,7 +210,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         const Expanded(child: Divider()),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppDimensions.spacingMd),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppDimensions.spacingMd,
+                          ),
                           child: Text('hoặc', style: AppTypography.caption),
                         ),
                         const Expanded(child: Divider()),
@@ -216,11 +231,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Chưa có tài khoản? ', style: AppTypography.bodySmall),
+                        Text(
+                          'Chưa có tài khoản? ',
+                          style: AppTypography.bodySmall,
+                        ),
                         GestureDetector(
                           onTap: isLoading
                               ? null
-                              : () => Navigator.pushNamed(context, AppRoutes.register),
+                              : () => Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.register,
+                                ),
                           child: Text(
                             'Đăng ký ngay',
                             style: AppTypography.bodySmall.copyWith(
