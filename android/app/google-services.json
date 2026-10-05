@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "329672173675",
+    "project_id": "tim-tro-duyhai-2026",
+    "storage_bucket": "tim-tro-duyhai-2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329672173675:android:9a0b258952c3d5abc3692e",
+        "android_client_info": {
+          "package_name": "com.example.u_24ct1_nguyenduyhai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4WW9sJvua53R2aqrNgADzEavZ19gGpfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

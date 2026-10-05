@@ -1,14 +1,29 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'app.dart';
 import 'features/auth/data/mock_auth_repository.dart';
+import 'features/boarding_house/data/firebase_boarding_house_repository.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Active authentication repository.
-  // To switch to live Firebase when credentials and configuration are provided later:
-  // final authRepository = FirebaseAuthRepository();
+  // Initialize Firebase SDK with configured platform options
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Active authentication repository (Mock for now, as Firebase Auth is postponed)
   final authRepository = MockAuthRepository();
 
-  runApp(BoardingHouseApp(authRepository: authRepository));
+  // Active boarding house repository backed by Cloud Firestore
+  final boardingHouseRepository = FirebaseBoardingHouseRepository();
+
+  runApp(
+    BoardingHouseApp(
+      authRepository: authRepository,
+      boardingHouseRepository: boardingHouseRepository,
+    ),
+  );
 }
+

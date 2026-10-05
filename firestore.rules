@@ -1,0 +1,12 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /rooms/{roomId} {
+      // Cho phép công khai đọc dữ liệu phòng trọ cho ứng dụng
+      allow read: if true;
+      // Khóa toàn bộ quyền ghi từ phía client trên môi trường production
+      allow write: if false;
+    }
+  }
+}

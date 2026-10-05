@@ -1,5 +1,6 @@
-﻿import '../../../search/presentation/screens/search_screen.dart';
+import '../../../search/presentation/screens/search_screen.dart';
 import '../../../home/presentation/screens/home_screen.dart';
+import '../../../boarding_house/presentation/boarding_house_scope.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
@@ -131,11 +132,15 @@ class _MainShellScreenState extends State<MainShellScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final boardingHouseRepo = BoardingHouseScope.of(context);
     final tabs = [
       HomeScreen(
+        repository: boardingHouseRepo,
         onNavigateToTab: _onDestinationSelected,
       ),
-      const SearchScreen(),
+      SearchScreen(
+        repository: boardingHouseRepo,
+      ),
       const ShellTabPlaceholder(
         title: AppStrings.tabMap,
         icon: Icons.map_rounded,

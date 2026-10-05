@@ -1,7 +1,8 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:_24ct1_nguyenduyhai/app.dart';
 import 'package:_24ct1_nguyenduyhai/features/auth/data/mock_auth_repository.dart';
+import 'package:_24ct1_nguyenduyhai/features/boarding_house/data/mock_boarding_house_repository.dart';
 import 'package:_24ct1_nguyenduyhai/features/auth/domain/models/app_user.dart';
 import 'package:_24ct1_nguyenduyhai/features/auth/domain/models/user_role.dart';
 import 'package:_24ct1_nguyenduyhai/core/constants/app_strings.dart';
@@ -11,7 +12,12 @@ import 'package:_24ct1_nguyenduyhai/features/home/presentation/widgets/map_disco
 void main() {
   testWidgets('Unauthenticated user starts on LoginScreen', (WidgetTester tester) async {
     final repo = MockAuthRepository();
-    await tester.pumpWidget(BoardingHouseApp(authRepository: repo));
+    await tester.pumpWidget(
+      BoardingHouseApp(
+        authRepository: repo,
+        boardingHouseRepository: MockBoardingHouseRepository(),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Đăng nhập'), findsWidgets);
@@ -29,7 +35,12 @@ void main() {
     );
     final repo = MockAuthRepository(initialUser: verifiedUser);
 
-    await tester.pumpWidget(BoardingHouseApp(authRepository: repo));
+    await tester.pumpWidget(
+      BoardingHouseApp(
+        authRepository: repo,
+        boardingHouseRepository: MockBoardingHouseRepository(),
+      ),
+    );
     await tester.pumpAndSettle();
 
     // Verify Tab is on Home

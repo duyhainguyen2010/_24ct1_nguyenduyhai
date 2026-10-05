@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import '../domain/models/boarding_house.dart';
 import '../domain/models/boarding_house_filter.dart';
 import '../domain/models/room_amenity.dart';
@@ -7,6 +7,9 @@ import '../domain/repositories/boarding_house_repository.dart';
 
 /// In-memory mock repository providing realistic university boarding house data.
 class MockBoardingHouseRepository implements BoardingHouseRepository {
+  /// Public static getter to provide seed data for development/seeding without duplication.
+  static List<BoardingHouse> get initialMockData => _mockData;
+
   static final List<BoardingHouse> _mockData = [
     BoardingHouse(
       id: 'bh-001',
