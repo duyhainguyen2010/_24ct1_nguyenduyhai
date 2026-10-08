@@ -2,11 +2,33 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Rooms collection: public read, write locked for production
     match /rooms/{roomId} {
-      // Cho phép công khai đọc dữ liệu phòng trọ cho ứng dụng
       allow read: if true;
-      // Khóa toàn bộ quyền ghi từ phía client trên môi trường production
       allow write: if false;
+    }
+
+    // Users collection:
+    // - User chỉ đọc profile của chính mình
+    // - create: yêu cầu auth, đúng uid, role chỉ được là 'tenant' hoặc 'owner', email khớp auth token
+    // - update: yêu cầu auth, đúng uid, không đổi role, email, createdAt; chỉ cho sửa fullName, phone, avatarUrl
+    // - delete: khóa toàn bộ quyền xóa từ client
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    && (request.resource.data.role == 'tenant' || request.resource.data.role == 'owner')
+                    && (!('email' in request.auth.token) || request.resource.data.email == request.auth.token.email);
+
+      allow update: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.resource.data.role == resource.data.role
+                    && request.resource.data.email == resource.data.email
+                    && request.resource.data.createdAt == resource.data.createdAt
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fullName', 'phone', 'avatarUrl']);
+
+      allow delete: if false;
     }
   }
 }

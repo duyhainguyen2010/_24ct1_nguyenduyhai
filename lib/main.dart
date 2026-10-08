@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'app.dart';
-import 'features/auth/data/mock_auth_repository.dart';
+import 'features/auth/data/firebase_auth_repository.dart';
 import 'features/boarding_house/data/firebase_boarding_house_repository.dart';
 
 void main() async {
@@ -13,8 +13,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Active authentication repository (Mock for now, as Firebase Auth is postponed)
-  final authRepository = MockAuthRepository();
+  // Active authentication repository backed by Firebase Authentication
+  final authRepository = FirebaseAuthRepository();
 
   // Active boarding house repository backed by Cloud Firestore
   final boardingHouseRepository = FirebaseBoardingHouseRepository();
